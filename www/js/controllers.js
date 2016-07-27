@@ -36,9 +36,14 @@ angular.module('starter.controllers', ['starter.services'])
 
 })
 
-.controller('MapsCtrl', function($scope, $ionicLoading, $compile, Proximiio, $http) {
+.controller('MapsCtrl', function($scope, $ionicLoading, $compile, Proximiio, $http, $localStorage) {
   var map;
   var PROXIMIIO_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImlzcyI6IjM4Mjc1N2E1YmY4ZTQ3OTBhMGEwZmY0ZmUyYzJjNTdmIiwidHlwZSI6ImFwcGxpY2F0aW9uIiwiYXBwbGljYXRpb25faWQiOiJkMmVkMGQ3NS0zODFkLTQ1NTEtODQ1Ni01MGEyYTFlNDBkMDMifQ.hCbbqR4Fg30sRbxwXpQBrDx_yISaaNqI5CEonU4YdHc";
+
+  if ($localStorage.geofences === undefined) {
+    $localStorage.geofences = [];
+  }
+
   document.addEventListener("deviceready", function() {
     var div = document.getElementById("map");
 
@@ -53,12 +58,13 @@ angular.module('starter.controllers', ['starter.services'])
     map.showDialog();
   }
 
+
   $scope.myLoc = function() {
     if ($scope.loc !== undefined) {
       map.animateCamera({
         'target': $scope.loc,
         'zoom': 18,
-        'duration': 3000 // = 5 sec.
+        'duration': 1000 // = 5 sec.
       }, function() {
         console.log("The animation is done");
       });
@@ -74,74 +80,99 @@ angular.module('starter.controllers', ['starter.services'])
         'Authorization': 'Bearer ' + PROXIMIIO_TOKEN
       },
       data: {
-        name: 'test',
-        address: 'gadi',
+        name: 'test2',
+        address: 'gadi2',
         area: {
-          lat: '32.083224',
-          lng: '34.8203677'
+          lat: '32.053224',
+          lng: '34.3203677'
         },
-        raduis: '30'
+        raduis: '700'
       }
     }
 
     $http(req)
       .then(function(data) {
-        console.log(data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-}
-
-function onMapReady() {
-
-  var outputTriggerCallback = function(output) {
-    $scope.output = output;
-    $scope.$apply()
-  };
-
-  var inputTriggerCallback = function(entered, geofence) {
-    $scope.entered = entered;
-    $scope.inputType = geofence.name;
-    $scope.lastPositionLatitude = geofence.area.lat;
-    $scope.lastPositionLongitude = geofence.area.lon;
-    $scope.inputObject = JSON.stringify(geofence, null, 2);
-    $scope.$apply();
-  };
-
-  var positionChangeCallback = function(coords) {
-    $scope.lastPositionLatitude = coords.coordinates.lat;
-    $scope.lastPositionLongitude = coords.coordinates.lon;
-
-    $scope.loc = new plugin.google.maps.LatLng($scope.lastPositionLatitude, $scope.lastPositionLongitude);
-
-    var msg = ["Current your location:\n",
-      "latitude:" + $scope.loc.lat,
-      "longitude:" + $scope.loc.lng
-    ].join("\n");
-
-    if ($scope.mark === undefined) {
-      map.addMarker({
-        'position': $scope.loc,
-        'title': msg,
-        'icon': {
-          url: './img/my-loc.png'
-        }
-      }, function(marker) {
-        marker.showInfoWindow();
-        $scope.mark = marker;
+        $localStorage.geofences.push(data);
+        console.log($localStorage.geofences.length);
+      })
+      .catch(function(err) {
+        console.log(err);
       });
-    } else {
-      $scope.mark.setPosition($scope.loc);
-      var msg = ["latitude:" + $scope.loc.lat,
+  }
+
+  function onMapReady() {
+
+    // draw fences
+    (function() {
+      if ($localStorage.geofences !== undefined) {
+        $localStorage.geofences.forEach(fence => {
+          var latlng = new plugin.google.maps.LatLng(fence.data.geopoint[1], fence.data.geopoint[0]);
+          map.addCircle({
+            'center': latlng,
+            'radius': fence.data.raduis,
+            'strokeColor': '#AA00FF',
+            'strokeWidth': 2,
+            'fillColor': '#880000'
+          });
+
+          map.addMarker({
+            'position': latlng,
+            'title': fence.data.name,
+          }, function(marker) {
+            marker.showInfoWindow();
+          });
+        });
+      }
+    })();
+
+
+    var outputTriggerCallback = function(output) {
+      $scope.output = output;
+      $scope.$apply()
+    };
+
+    var inputTriggerCallback = function(entered, geofence) {
+      $scope.entered = entered;
+      $scope.inputType = geofence.name;
+      $scope.lastPositionLatitude = geofence.area.lat;
+      $scope.lastPositionLongitude = geofence.area.lon;
+      $scope.inputObject = JSON.stringify(geofence, null, 2);
+      $scope.$apply();
+    };
+
+    var positionChangeCallback = function(coords) {
+      $scope.lastPositionLatitude = coords.coordinates.lat;
+      $scope.lastPositionLongitude = coords.coordinates.lon;
+
+      $scope.loc = new plugin.google.maps.LatLng($scope.lastPositionLatitude, $scope.lastPositionLongitude);
+
+      var msg = ["Current your location:\n",
+        "latitude:" + $scope.loc.lat,
         "longitude:" + $scope.loc.lng
       ].join("\n");
-      $scope.mark.setTitle(msg);
-    }
 
-    $scope.$apply();
+      if ($scope.mark === undefined) {
+        map.addMarker({
+          'position': $scope.loc,
+          'title': msg,
+          'icon': {
+            url: './img/my-loc.png'
+          }
+        }, function(marker) {
+          marker.showInfoWindow();
+          $scope.mark = marker;
+        });
+      } else {
+        $scope.mark.setPosition($scope.loc);
+        var msg = ["latitude:" + $scope.loc.lat,
+          "longitude:" + $scope.loc.lng
+        ].join("\n");
+        $scope.mark.setTitle(msg);
+      }
+
+      $scope.$apply();
+    };
+
+    Proximiio.init(outputTriggerCallback, inputTriggerCallback, positionChangeCallback);
   };
-
-  Proximiio.init(outputTriggerCallback, inputTriggerCallback, positionChangeCallback);
-};
 })
