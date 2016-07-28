@@ -26,7 +26,8 @@ angular.module('starter.controllers')
         method: 'DELETE',
         url: 'https://api.proximi.fi/core/geofences/' + fence.data.id,
         headers: {
-          'Authorization': 'Bearer ' + GADI_TOKEN
+          //'Authorization': 'Bearer ' + GADI_TOKEN
+		  'Authorization': 'Bearer ' + PROXIMIIO_TOKEN
         }
       }
 
