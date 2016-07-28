@@ -1,16 +1,10 @@
-<ion-view view-title="Proximiio Status">
+<ion-view view-title="Proximiio GeoAlarms">
   <ion-content>
-    <!-- <ion-list ng-controller="MyCtrl" show-delete="shouldShowDelete" show-reorder="shouldShowReorder" can-swipe="listCanSwipe"> -->
-      <!-- <ion-item ng-repeat="fence in fences" class="item-thumbnail-left"> -->
-        <!-- <h2>{{fence.name}}</h2>
-        <ion-toggle toggle-class="toggle-calm" ng-model="fence.checked  ">
-    </ion-item>
-    </ion-list> -->
     <div class="list">
         <ion-toggle ng-repeat="item in geofences"
                     ng-model="item.data.checked"
                     ng-checked="item.data.checked">
-          {{ item.data.name }}
+          {{ item.data.message }}
         </ion-toggle>
   </ion-content>
 </ion-view>

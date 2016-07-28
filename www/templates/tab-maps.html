@@ -1,8 +1,23 @@
-<ion-view view-title="Proximiio Status">
+<ion-view view-title="Proximiio GeoAlarms">
   <ion-content>
     <div id="map" data-tap-disabled="false">
-      <button class="FAB" ng-click='kaboom()'>+</button>
-      <button class="FAB2" ng-click='myLoc()'>0</button>
+		<div ng-show="addingFence && !latLng"><span>Tap map to add geofence</span></div>
+		<input ng-show="latLng" type="text" id="messageInput" ng-model="alarm.alarmMessage" placeholder="Enter alarm message" />
+		<div id="slider" ng-show="latLng">
+			<input 
+				type="range" 
+				name="radiusSelector"
+				min="20"
+				max="1000" 
+				ng-model="alarm.alarmRadius" 
+				value="{{alarm.alarmRadius}}">
+			<span>{{alarm.alarmRadius}}m</span>
+		</div>
+		<button class="FAB icon ion-android-add" 
+				ng-class="addingFence ? 'CANCEL ion-android-close' : 'ADD ion-android-add'" 
+				ng-click='toggleAddFence()'></button>
+		<button ng-show="latLng" class="FAB DONE icon ion-android-done" ng-click="doneAddingFence()"></button>
+		<button class="FAB LOCATE icon ion-android-locate" ng-click='myLoc()'></button>
     </div>
   </ion-content>
 </ion-view>

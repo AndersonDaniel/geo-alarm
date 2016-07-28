@@ -13,11 +13,11 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="18"/>
-  <preference name="android-targetSdkVersion" value="23" />
+  <preference name="android-targetSdkVersion" value="23"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
-  <plugin name="navtureapps-proximiio" spec="https://github.com/proximiio/proximiio-cordova.git" />
+  <plugin name="navtureapps-proximiio" spec="https://github.com/proximiio/proximiio-cordova.git"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

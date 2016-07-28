@@ -11,28 +11,73 @@ pre { font-family: "Lucida Console", Monaco, monospace; font-size: 10px; }
 }
 
 .FAB {
+	border: none;
+	border-radius: 50px;
+	width: 40px;
+	height: 40px;
+	font-size: 1.2em;
+	box-shadow: 1px 1px 6px 3px gray;
 	position: absolute;
+}
+
+.LOCATE {
 	left: 10px;
 	bottom: 30px;
-	border: none;
-	background: #2196f3;
-	border-radius: 50px;
-	width: 40px;
-	height: 40px;
-	color: white;
-	font-size: 1.2em;
-	box-shadow: 1px 1px 6px 3px gray;
+	background: #DEDEDE;
+	color: #555555;
 }
-.FAB2 {
-	position: absolute;
-	left: 10px;
-	bottom: 80px;
-	border: none;
+.ADD {
+	right: 10px;
+	bottom: 30px;
 	background: #2196f3;
-	border-radius: 50px;
-	width: 40px;
-	height: 40px;
 	color: white;
-	font-size: 1.2em;
-	box-shadow: 1px 1px 6px 3px gray;
+}
+
+.CANCEL {
+	background: rgb(255, 100, 100);
+	right: 10px;
+	bottom: 30px;
+}
+
+.DONE {
+	background: lightgreen;
+	right: 10px;
+	bottom: 80px;
+}
+
+#map div {
+	text-align: center;
+}
+
+#map input[type=text] {
+	margin: 0 auto;
+	width: 80%;
+	position: relative;
+	top: 30px;
+	background: none;
+	border-bottom: 2px solid black;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#slider {
+	left: 10%;
+	width: 80%;
+	position: relative;
+	top: 40px;
+}
+
+#slider input[type=range] {
+	width: 70%;
+	background: none;
+	border-bottom: 2px solid white;
+	text-align: center;
+	font-size: 2em;
+}
+
+#slider span {
+	position: relative;
+	top: -5px;
+	font-size: 1.3em;
+	margin-left: 20px;
 }
