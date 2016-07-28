@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.ioapp463314" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>ProximiioIonic</name>
-  <description>
-        An Ionic Framework Proximi.io platform demo.
+  <description>&#xD;
+        An Ionic Framework Proximi.io platform demo.&#xD;
     </description>
-  <author email="support@proximi.io" href="https://proximi.io">
-      Proximi.io
+  <author email="support@proximi.io" href="https://proximi.io">&#xD;
+      Proximi.io&#xD;
     </author>
   <content src="index.html"/>
   <access origin="*"/>

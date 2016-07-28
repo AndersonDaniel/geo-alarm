@@ -20,6 +20,13 @@ pre { font-family: "Lucida Console", Monaco, monospace; font-size: 10px; }
 	position: absolute;
 }
 
+.item-content {
+	padding: 0!important;
+}
+
+.delete-btn {
+
+}
 .LOCATE {
 	left: 10px;
 	bottom: 30px;
