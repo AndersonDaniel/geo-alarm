@@ -1,38 +1,14 @@
 angular.module('starter.controllers', ['starter.services'])
 
-.controller('DashCtrl', function($scope, $state, Proximiio, $rootScope) {
-  $scope.entered = "Discovering...";
-  $scope.output = "Waiting...";
-  $scope.inputType = "Discovering...";
-  $scope.inputObject = "Discovering...";
-  $scope.lastPositionLatitude = "Discovering...";
-  $scope.lastPositionLongitude = "Discovering...";
+.controller('DashCtrl', function($scope, $state, $localStorage) {
+  // init geofences
+  if ($localStorage.geofences === undefined) {
+    $localStorage.geofences = [];
+  }
+else {
+  $scope.geofences = $localStorage.geofences;
 
-  ionic.Platform.ready(function() {
-
-    var outputTriggerCallback = function(output) {
-      $scope.output = output;
-      $scope.$apply()
-    };
-
-    var inputTriggerCallback = function(entered, geofence) {
-      $scope.entered = entered;
-      $scope.inputType = geofence.name;
-      $scope.lastPositionLatitude = geofence.area.lat;
-      $scope.lastPositionLongitude = geofence.area.lon;
-      $scope.inputObject = JSON.stringify(geofence, null, 2);
-      $scope.$apply();
-    };
-
-    var positionChangeCallback = function(coords) {
-      $scope.lastPositionLatitude = coords.coordinates.lat;
-      $scope.lastPositionLongitude = coords.coordinates.lon;
-      $rootScope = coords.coordinates;
-      $scope.$apply();
-    };
-
-    Proximiio.init(outputTriggerCallback, inputTriggerCallback, positionChangeCallback);
-  });
+}
 
 })
 
@@ -92,6 +68,7 @@ angular.module('starter.controllers', ['starter.services'])
 
     $http(req)
       .then(function(data) {
+        data.data.checked = true;
         $localStorage.geofences.push(data);
         console.log($localStorage.geofences.length);
       })
