@@ -4,6 +4,8 @@ angular.module('starter.controllers')
     var PROXIMIIO_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImlzcyI6IjM3NGRmMTBhODI3NDQ2MTdiZDU3MzE5OTg2MjFlMjA3IiwidHlwZSI6ImFwcGxpY2F0aW9uIiwiYXBwbGljYXRpb25faWQiOiI5MjQ5ZTQ4ZC1lOWU4LTQ2OTctODUwYi1mMTZhNzQzOGMxYTkifQ.MfY5GpYWMyIxCGs05npiufTQj-w3stJEXxzjUzW28Ug";
     var GADI_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImlzcyI6IjM4Mjc1N2E1YmY4ZTQ3OTBhMGEwZmY0ZmUyYzJjNTdmIiwidHlwZSI6ImFwcGxpY2F0aW9uIiwiYXBwbGljYXRpb25faWQiOiIxYjU4OGU5Ni02ZTA2LTRhZjYtODdlNC0yZDc1MDM4NDFkNTEifQ.CssLoRApAOCNb4rS922sjfwkbktYNJ79PK9H321o5qQ";
 
+	
+	
     $scope.updateFences = function() {
 
     }
@@ -22,6 +24,18 @@ angular.module('starter.controllers')
     });
 
     document.addEventListener("deviceready", function() {
+	  // Notifications
+	  /*if (cordova && cordova.plugins && cordova.plugins.notification) {
+	  	//alert('notifying');
+	  	cordova.plugins.notification.local.schedule({
+	  		id: 1,
+	  		text: "Single Notification",
+	  		sound: 'file://sounds/alarm.mp3',
+	  		data: { "something": "wowowwow" }
+	  	});
+	  }*/
+		
+	  // Map
       var div = document.getElementById("map");
 
       // Initialize the map view
@@ -49,19 +63,21 @@ angular.module('starter.controllers')
 
     }, false);
 
-    $scope.whattheF = function() {
-      return $scope.addingFence && !$scope.latlng;
-    }
-
     $scope.myLoc = function() {
-      if ($scope.loc !== undefined) {
-        map.animateCamera({
-          'target': $scope.loc,
-          'zoom': 18,
-          'duration': 1000 // = 5 sec.
-        }, function() {
-          console.log("The animation is done");
-        });
+      if ($scope.loc) {
+		try {
+			alert('$scope.loc: ' + JSON.stringify($scope.loc))
+			map.animateCamera({
+			  //'target': $scope.loc,
+			  'target' : new plugin.google.maps.LatLng(32.1837013, 34.8752337),
+			  'zoom': 18,
+			  'duration': 1000 // = 5 sec.
+			}, function() {
+			  alert("The animation is done");
+			});
+		} catch(err) {
+			alert(err)
+		}
       }
     }
 
@@ -77,7 +93,8 @@ angular.module('starter.controllers')
         url: 'https://api.proximi.fi/core/geofences',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + GADI_TOKEN
+          //'Authorization': 'Bearer ' + GADI_TOKEN
+		  'Authorization': 'Bearer ' + PROXIMIIO_TOKEN
         },
         data: {
           name: name,
@@ -179,8 +196,7 @@ angular.module('starter.controllers')
 
     }
 
-    function onMapReady() {
-
+    function onMapReady() {	
       // draw fences
       (function() {
         if ($localStorage.geofences !== undefined) {
@@ -194,9 +210,20 @@ angular.module('starter.controllers')
       };
 
       var inputTriggerCallback = function(entered, geofence) {
+		$localStorage.geofences.forEach(function(fence) {
+			if (fence.data.id == geofence.id) {
+				if (cordova && cordova.plugins && cordova.plugins.notification) {
+					cordova.plugins.notification.local.schedule({
+						id: 1,
+						text: fence.data.message,
+						sound: 'file://sounds/alarm.mp3',
+					});
+				}
+			}
+		});
+		
         $scope.entered = entered;
         console.log('entered');
-        alert(geofence.name);
         console.log(geofence);
         $scope.inputType = geofence.name;
         $scope.lastPositionLatitude = geofence.area.lat;

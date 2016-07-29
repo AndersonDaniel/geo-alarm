@@ -4,7 +4,8 @@ angular.module('starter.services', [])
   .factory("Proximiio", function() {
     return {
       init: function(outputTriggerCallback, inputTriggerCallback, positionChangeCallback) {
-        proximiio.setToken(GADI_TOKEN);
+        proximiio.setToken(PROXIMIIO_TOKEN);
+		//proximiio.setToken(GADI_TOKEN);
         proximiio.setDebugOutput(true, null, null);
         proximiio.setOutputTriggerCallback(outputTriggerCallback);
         proximiio.setInputTriggerCallback(inputTriggerCallback);
